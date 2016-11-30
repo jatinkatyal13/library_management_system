@@ -270,7 +270,7 @@ $desig = getDesig();
 							<div class="card-content">
 								<span class="card-title">Add User</span>
 								<p>
-									Use this window for adding the new user into the databse.
+									Use this window for adding the new user into the databse !
 								</p>
 							</div>
 							<div class="card-action">
