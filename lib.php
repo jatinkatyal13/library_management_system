@@ -30,6 +30,46 @@ function getIncludes(){
 //function to get the top navigation bar with a given title
 function getnavBar($title){
 ?>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('.modal-trigger').leanModal();
+		});
+		function openchangepassModal(){
+			$('#changepass-modal').openModal({
+				complete: function(){
+					$("#changepass-message-dialog").css("display", "none");
+					document.getElementById("old_pass").value = "";
+					document.getElementById("new_pass").value = "";
+					document.getElementById("new_pass_confirm").value =- "";
+				}
+			});
+		}
+		function changepass(){
+			var oldpass = document.getElementById("old_pass").value;
+			var newpass = document.getElementById("new_pass").value;
+			var confirmpass = document.getElementById("new_pass_confirm").value;
+			$.post(
+				"changePass.php",
+				{
+					"old_pass" : oldpass,
+					"new_pass" : newpass,
+					"new_pass_confirm" : confirmpass
+				},
+				function (data, status){
+					$("#changepass-message-dialog").css("display", "block");
+					if (data.success){
+						document.getElementById("old_pass").value = "";
+						document.getElementById("new_pass").value = "";
+						document.getElementById("new_pass_confirm").value =- "";
+						document.getElementById("changepass-message").innerHTML = "Successfully Changed the Password";
+					} else {
+						document.getElementById("changepass-message").innerHTML = data.error;
+					}
+				},
+				"json"
+			);
+		}
+	</script>
 	<nav>
 		<div class="nav-wrapper">
 			<a href="index.php" class="brand-logo left" style="margin-right:20px"><?php echo $title ?></a>
@@ -58,6 +98,30 @@ function getnavBar($title){
 			</ul>
 		</div>
 	</nav>
+
+	<!-- Change Pass modal -->
+	<div id="changepass-modal" class="modal">
+		<div class="modal-content">
+			<div class="input-field">
+				<input type="password" id="old_pass">
+				<label for="old_pass">Old Password</label>
+			</div>
+			<div class="input-field">
+				<input type="password" id="new_pass">
+				<label for="new_pass">New Password</label>
+			</div>
+			<div class="input-field">
+				<input type="password" id="new_pass_confirm">
+				<label for="new_pass_confirm">Confirm Password</label>
+			</div>
+			<div id="changepass-message-dialog" class="card-panel green lighten-2" style="display:none;">
+				<p class="white-text" id="changepass-message"></p>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn waves-effect waves-light" onclick="changepass()">Change</button>
+		</div>
+	</div>
 
 	<!-- login modal -->
 	<div id="login-modal" class="modal">
@@ -94,14 +158,9 @@ function getnavBar($title){
 	<!-- logged in user panel -->
 	<ul id="logged-in-dropdown" class="dropdown-content">
 		<li><a href="dashboard.php">Dashboard</a></li>
+		<li><a href="#" onclick="openchangepassModal()">Change Password</a></li>
 		<li><a href="logout.php">Logout</a></li>
 	</ul>
-
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('.modal-trigger').leanModal();
-		});
-	</script>
 <?php
 }
 
